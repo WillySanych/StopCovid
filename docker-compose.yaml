@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+  backend-spring:
+    build: ./backend-spring
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db"
+
+  frontend-angular:
+    build: ./frontend-angular
+    ports:
+      - "4200:80"
+    links:
+      - backend-spring
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - "POSTGRES_USER=docker"
+      - "POSTGRES_PASSWORD=docker"
+      - "POSTGRES_DB=db"
+    ports:
+      - "5432:5432"
